@@ -1,6 +1,9 @@
 using WordSearch
 
-board=WordSearch.createEmptyBoard(13)
+println("Enter Size (13):")
+size = parse(Int, readline())
+
+board=WordSearch.createEmptyBoard(size)
 
 println("Enter Title:")
 title=readline()
@@ -25,6 +28,8 @@ open("wordsearch.tex", "w") do f
     write(f, "\\usepackage[margin=2cm]{geometry}\n")
     write(f, "\\usepackage{tikz}\n")
     write(f, "\\usepackage{multicol}\n")
+    write(f, "\\usepackage[scaled]{helvet}\n") # Use Helvetica font; for sans-serif with open 'g'
+    write(f, "\\renewcommand{\\familydefault}{\\sfdefault}\n")
     write(f, "\\begin{document}\n\n")
     write(f, "\\centering\n\n")
     # Print title
