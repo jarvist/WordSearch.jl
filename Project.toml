@@ -3,6 +3,9 @@ uuid = "bc9bc190-06a8-4c61-b33b-656c0b162d31"
 authors = ["Jarvist Moore Frost <jarvist@gmail.com> and contributors"]
 version = "1.0.0-DEV"
 
+[deps]
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+
 [compat]
 julia = "1.6.7"
 

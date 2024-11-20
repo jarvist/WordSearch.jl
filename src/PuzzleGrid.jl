@@ -13,28 +13,33 @@ Errors
 5. pwd() print working directory
 
 =#
-module PuzzleGrid
     export displayGrid, words, createEmptyGrid, placeWord, board, placed, one, two, three, four, five, six, seven, eight
-    using Colors
-    using Crayons
+
+    using StatsBase # to allow weighted sampling
 
     words = ["ADVENTURE", "DESTINATION", "PASSPORT", "EXPLORE", "TOURIST", 
             "JOURNEY", "FLIGHT", "CRUISE", "LUGGAGE", "TICKET"]
 
-    board = []
-    puzzel_size = 13
-
-    function createEmptyGrid(size)
+    function createEmptyBoard(size)
         return [['-' for _ in 1:size] for _ in 1:size]
+    end
+
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    alphabetWeights = [0.085, 0.02, 0.045, 0.034, 0.11, 0.018, 0.025, 0.03, 0.075, 0.002, 0.011, 0.055, 0.03, 0.066,
+    0.072, 0.031, 0.002, 0.075, 0.057, 0.07, 0.036, 0.01, 0.012, 0.003, 0.018, 0.003]
+
+    function fillBoardRandomLetters(board)
+        for line in board
+            line[line .== '-'] .= sample(alphabet, Weights(alphabetWeights), count(==('-'), line))
+        end
     end
 
     function displayGrid(board)
         for i in 1:length(board)
-            println(Crayon(foreground = :red), board[i])
+            println(board[i])
         end
-
     end
-
 
     # Helper functions 
     function one(board, word)
@@ -73,16 +78,20 @@ module PuzzleGrid
     
     functDict = Dict(
                 "1" => (one, two, five),     # horizontal
-                "2" => (two,one, six),    # vertical
+                "2" => (two, one, six),    # vertical
                 "3" => (four, four, seven), # diagonal top left to bottom right
                 "4" => (three, four, eight)
     )
 
 
-    function placeWord(board, word::String)
-        wordDirection = rand(1:4)
-        #wordDirection = 4
-        word = rand(0:1) == 0 ? word : reverse(word)
+    function placeWord(board, word::AbstractString; allow_reverse=false, allow_diagonal=false)
+        # If diagonal not allowed, only use directions 1-2, otherwise 1-4
+        max_direction = allow_diagonal ? 4 : 2
+        wordDirection = rand(1:max_direction)
+        
+        # Only (randomly) reverse if allow_reverse is true
+        word = allow_reverse && rand(0:1) == 0 ? reverse(word) : word
+        
         placed = false
         attempts = 0
         while !placed && attempts < 300
@@ -122,4 +131,3 @@ module PuzzleGrid
     displayGrid(x)
     =#
     
-end
