@@ -13,7 +13,10 @@ words=readline() |> split
 show(words)
 
 for word in words
-    WordSearch.placeWord(board,word)
+    placed=WordSearch.placeWord(board,word,allow_reverse=false,allow_diagonal=false)
+    if !placed
+        println("WARNING! Failed to place word: $word")
+    end
 end
 
 WordSearch.fillBoardRandomLetters(board)
@@ -64,8 +67,9 @@ open("wordsearch.tex", "w") do f
     write(f, "\\vspace{1cm}\n")  # Add some vertical space
     write(f, "\\begin{multicols}{3}\\raggedcolumns\n")  # 3 columns, adjust number as needed
     write(f, "\\begin{itemize}\\setlength{\\itemsep}{0.2cm}\n")
+    write(f, "\\Hugo\\sffamily \n")
     for word in sort(words)  # Sort words alphabetically
-        write(f, "\\item \\textbf{$(word)}\n")
+        write(f, "\\item {$(word)}\n")
     end
     write(f, "\\end{itemize}\n")
     write(f, "\\end{multicols}\n\n")
