@@ -131,3 +131,29 @@ Errors
     displayGrid(x)
     =#
     
+    """
+    Base.show(io::IO, board::Vector{Vector{Char}})
+    
+    Display the word search board in a nice grid format with borders.
+    """
+    function Base.show(io::IO, board::Vector{Vector{Char}})
+        n = length(board)
+        # Print top border
+        println(io, "┌" * "─" ^ (2n-1) * "┐")
+        
+        # Print each row
+        for i in 1:n
+            print(io, "│")
+            for j in 1:n
+                print(io, board[i][j])
+                if j < n
+                    print(io, " ")
+                end
+            end
+            println(io, "│")
+        end
+        
+        # Print bottom border
+        println(io, "└" * "─" ^ (2n-1) * "┘")
+    end
+    
