@@ -10,7 +10,7 @@ function parse_commandline()
         "--size", "-s"
             help = "Size of the puzzle grid"
             arg_type = Int
-            default = 14
+            default = 12
         "--title", "-t"
             help = "Title of the puzzle"
             default = "WordSearch.jl"
@@ -57,6 +57,11 @@ function main()
     # Try to place each word
     println("Placing words...")
     for word in words
+        if length(word) > args["size"]
+            println("⚠️  WARNING! Word '$word' is longer than board size $(args["size"]) - skipping")
+            continue
+        end
+
         placed = WordSearch.placeWord(board, word, 
                                     allow_reverse=args["reverse"], 
                                     allow_diagonal=args["diagonal"])
