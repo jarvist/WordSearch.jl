@@ -54,11 +54,17 @@ function main()
     # Parse words from comma-separated string
     words = split(args["words"], ',') .|> strip .|> lowercase
     
+    words=sort(words, by=length, rev=true) # place longest words first... 
+    # makes the greedy placement more likely to succeed (i.e. achieves higher density). 
+    # I don't know whether this biases the boards produced? 
+    
     # Try to place each word
     println("Placing words...")
+    incomplete=false
     for word in words
         if length(word) > args["size"]
             println("⚠️  WARNING! Word '$word' is longer than board size $(args["size"]) - skipping")
+            incomplete=true
             continue
         end
 
@@ -67,6 +73,7 @@ function main()
                                     allow_diagonal=args["diagonal"])
         if !placed
             println("⚠️  WARNING! Failed to place word: $word")
+            incomplete=true
         else
             println("✓ Successfully placed: $word")
         end
@@ -84,6 +91,10 @@ function main()
     println("\nWords to find:")
     println(join(words, ", "))
     
+    if incomplete
+        println("WARNING! Did not place all words.")
+    end
+
     # Generate LaTeX output only if output file is specified
     if !isnothing(args["output"])
         WordSearch.generateLatexOutput(args["output"], board, words, args["title"])
