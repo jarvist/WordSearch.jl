@@ -61,6 +61,8 @@ function main()
     # Try to place each word
     println("Placing words...")
     incomplete=false
+    placedwords=[]
+
     for word in words
         if length(word) > args["size"]
             println("⚠️  WARNING! Word '$word' is longer than board size $(args["size"]) - skipping")
@@ -75,6 +77,7 @@ function main()
             println("⚠️  WARNING! Failed to place word: $word")
             incomplete=true
         else
+            append!(placedwords,[word])
             println("✓ Successfully placed: $word")
         end
     end
@@ -89,7 +92,7 @@ function main()
     show(board)
 
     println("\nWords to find:")
-    println(join(words, ", "))
+    println(join(placedwords, ", "))
     
     if incomplete
         println("WARNING! Did not place all words.")
@@ -97,7 +100,7 @@ function main()
 
     # Generate LaTeX output only if output file is specified
     if !isnothing(args["output"])
-        WordSearch.generateLatexOutput(args["output"], board, words, args["title"])
+        WordSearch.generateLatexOutput(args["output"], board, placedwords, args["title"])
         println("\nLaTeX output written to $(args["output"])")
     end
 end
