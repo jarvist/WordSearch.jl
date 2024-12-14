@@ -52,7 +52,7 @@ function main()
     board = WordSearch.createEmptyBoard(args["size"])
     
     # Parse words from comma-separated string
-    words = split(args["words"], ',') .|> strip .|> lowercase
+    words = split(args["words"], ',') .|> strip 
     
     words=sort(words, by=length, rev=true) # place longest words first... 
     # makes the greedy placement more likely to succeed (i.e. achieves higher density). 
